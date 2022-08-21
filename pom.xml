@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.d4rkc0de</groupId>
-    <artifactId>SparkSamples</artifactId>
+    <artifactId>SparkNlp</artifactId>
     <version>1.0-SNAPSHOT</version>
     <inceptionYear>2008</inceptionYear>
     <properties>
@@ -10,6 +10,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <scala.version>2.12.12</scala.version>
         <spark.version>3.2.1</spark.version>
+        <hadoop.version>3.3.0</hadoop.version>
+        <spark.nlp.version>4.0.2</spark.nlp.version>
     </properties>
 
     <repositories>
@@ -29,23 +31,27 @@
     </pluginRepositories>
 
     <dependencies>
+
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.4</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.specs</groupId>
             <artifactId>specs</artifactId>
             <version>1.2.5</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Spark -->
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -61,25 +67,36 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.12</artifactId>
             <version>${spark.version}</version>
         </dependency>
 
+        <!-- hadoop -->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.johnsnowlabs.nlp/spark-nlp -->
+
+        <!-- spark-nlp -->
         <dependency>
             <groupId>com.johnsnowlabs.nlp</groupId>
             <artifactId>spark-nlp_2.12</artifactId>
-            <version>4.0.2</version>
+            <version>${spark.nlp.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.johnsnowlabs.nlp/spark-nlp-gpu -->
         <dependency>
             <groupId>com.johnsnowlabs.nlp</groupId>
             <artifactId>spark-nlp-gpu_2.12</artifactId>
+            <version>${spark.nlp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.johnsnowlabs.nlp</groupId>
+            <artifactId>spark-nlp-m1_2.12</artifactId>
             <version>4.0.2</version>
         </dependency>
     </dependencies>

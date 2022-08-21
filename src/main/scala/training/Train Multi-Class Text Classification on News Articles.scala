@@ -28,13 +28,13 @@ import org.apache.spark.ml.Pipeline
 
 // COMMAND ----------
 
-object Train_Multi_Class_Text_Classification_on_News_Articles {
+object Train_Multi_Class_Text_Classification_on_News_Articles extends App {
   val spark = SparkSession.builder()
     .master("local[1]")
     .appName("SparkSamples")
     .getOrCreate()
 
-  val trainDataset = spark.read.option("header", "true").csv("file:/databricks/driver/news_category_train.csv")
+  val trainDataset = spark.read.option("header", "true").csv("src/main/resources/news_category_train.csv")
 
 
   // COMMAND ----------
@@ -95,7 +95,9 @@ object Train_Multi_Class_Text_Classification_on_News_Articles {
 
   val testDataset = spark.createDataFrame(Seq(
     (0, "Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul."),
-    (1, "Scientists have discovered irregular lumps beneath the icy surface of Jupiter's largest moon, Ganymede. These irregular masses may be rock formations, supported by Ganymede's icy shell for billions of years...")
+    (1, "Scientists have discovered irregular lumps beneath the icy surface of Jupiter's largest moon, Ganymede. These irregular masses may be rock formations, supported by Ganymede's icy shell for billions of years..."),
+    (2, "Real madrid is the greatest club"),
+    (3, "Madrid is in Spain")
   )).toDF("id", "description")
 
   // COMMAND ----------
@@ -110,4 +112,15 @@ object Train_Multi_Class_Text_Classification_on_News_Articles {
   prediction.select("class.result").show(false)
   //metadata related to scores of all classes
   prediction.select("class.metadata").show(false)
+
+  /**
+   * +--------------------------------------------------------------------------------------------------------------+
+   *  |metadata                                                                                                      |
+   *  +--------------------------------------------------------------------------------------------------------------+
+   *  |[{Sports -> 2.9608505E-10, Business -> 1.0, World -> 1.7126188E-10, Sci/Tech -> 1.6969542E-8, sentence -> 0}] |
+   *  |[{Sports -> 2.6308782E-11, Business -> 2.9227912E-10, World -> 1.3042989E-10, Sci/Tech -> 1.0, sentence -> 0}]|
+   *  |[{Sports -> 1.0, Business -> 8.4274084E-29, World -> 3.5468265E-28, Sci/Tech -> 1.0559561E-31, sentence -> 0}]|
+   *  |[{Sports -> 1.0, Business -> 6.9152564E-17, World -> 7.552606E-11, Sci/Tech -> 1.5509252E-20, sentence -> 0}] |
+   *  +--------------------------------------------------------------------------------------------------------------+
+   */
 }

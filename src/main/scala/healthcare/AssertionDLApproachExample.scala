@@ -2,8 +2,8 @@ package healthcare
 
 import com.johnsnowlabs.nlp.DocumentAssembler
 import com.johnsnowlabs.nlp.annotator.{PerceptronModel, WordEmbeddingsModel}
-import com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLApproach
-import com.johnsnowlabs.nlp.annotators.assertion.logreg.NegexDatasetReader
+//import com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLApproach
+import com.johnsnowlabs.nlp.annotators.ner.dl.NerDLApproach
 import com.johnsnowlabs.nlp.annotators.sbd.pragmatic.SentenceDetector
 import com.johnsnowlabs.nlp.annotators.{Chunker, Tokenizer}
 import org.apache.spark.ml.Pipeline
@@ -30,7 +30,8 @@ object AssertionDLApproachExample extends App {
       "Test for asma, no asma.").toDF("text")
   val reader = new NegexDatasetReader
 
-  val datasetPath = "src/test/resources/rsAnnotations-1-120-random.txt"
+  // download from https://github.com/chapmanbe/negex/blob/master/rsAnnotations-1-120-random.txt
+  val datasetPath = "src/main/resources/rsAnnotations-1-120-random.txt"
   val trainDS = reader.readDataframe(datasetPath).withColumnRenamed("sentence", "text").cache
 
 
@@ -62,17 +63,17 @@ object AssertionDLApproachExample extends App {
     .setCaseSensitive(false)
 
 
-  val assertionStatus = new AssertionDLApproach()
+  val assertionStatus = new NerDLApproach()
     .setGraphFolder("src/main/resources/assertion_dl/")
     .setInputCols("sentence", "chunk", "embeddings")
     .setOutputCol("assertion")
-    .setStartCol("start")
-    .setEndCol("end")
-    .setLabelCol("label")
-    .setLearningRate(0.01f)
+//    .setStartCol("start")
+//    .setEndCol("end")
+  //  .setLabelCol("label")
+ //   .setLearningRate(0.01f)
     .setDropout(0.15f)
     .setBatchSize(16)
-    .setEpochs(3)
+//    .setEpochs(3)
     .setValidationSplit(0.2f)
 
   val stages = Array(documentAssembler, sentenceDetector, tokenizer, POSTag, chunker, pubmed,

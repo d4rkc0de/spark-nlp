@@ -8,7 +8,7 @@ import com.johnsnowlabs.util.Benchmark
 import org.apache.spark.sql.functions.rand
 import org.apache.spark.ml.Pipeline
 
-class NorvigSweetingTest extends App {
+object NorvigSweetingTest extends App {
 
   ResourceHelper.spark
 
@@ -46,6 +46,7 @@ class NorvigSweetingTest extends App {
   val parquet = ResourceHelper.spark.read
     .text("data/vivekn/training_negative")
     .toDF("text").sort(rand())
+  parquet.show(false)
   val data = parquet.as[String].take(n)
   data.length
 
@@ -54,7 +55,7 @@ class NorvigSweetingTest extends App {
   }
 }
 
-class SymmetricDeleteTest extends App {
+object SymmetricDeleteTest extends App {
 
   ResourceHelper.spark
 

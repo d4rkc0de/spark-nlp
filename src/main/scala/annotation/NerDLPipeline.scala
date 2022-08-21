@@ -14,11 +14,12 @@ object NerDLPipeline extends App {
     .appName("test")
     .master("local[*]")
     .config("spark.driver.memory", "12G")
-    .config("spark.kryoserializer.buffer.max","200M")
-    .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")
+    .config("spark.kryoserializer.buffer.max", "200M")
+    .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     .getOrCreate()
 
   import spark.implicits._
+
   spark.sparkContext.setLogLevel("WARN")
 
   val document = new DocumentAssembler()
@@ -32,11 +33,11 @@ object NerDLPipeline extends App {
   val normalizer = new Normalizer()
     .setInputCols("token")
     .setOutputCol("normal")
-  
+
   val wordEmbeddings = WordEmbeddingsModel.pretrained()
     .setInputCols("document", "token")
     .setOutputCol("word_embeddings")
-    
+
   val ner = NerDLModel.pretrained()
     .setInputCols("normal", "document", "word_embeddings")
     .setOutputCol("ner")
@@ -57,10 +58,13 @@ object NerDLPipeline extends App {
 
   val testing = Seq(
     (1, "Google is a famous company"),
-    (2, "Peter Parker is a super heroe")
-  ).toDS.toDF( "_id", "text")
+    (2, "Peter Parker is a super heroe"),
+    (3, "AC Milan is a great club")
+  ).toDS.toDF("_id", "text")
 
   val result = pipeline.fit(Seq.empty[String].toDS.toDF("text")).transform(testing)
-  Benchmark.time("Time to convert and show") {result.select("ner", "ner_converter").show(truncate=false)}
+  Benchmark.time("Time to convert and show") {
+    result.select("ner", "ner_converter").show(truncate = false)
+  }
 
 }

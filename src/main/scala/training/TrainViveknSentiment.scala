@@ -68,7 +68,7 @@ object TrainViveknSentiment extends App {
     val testingDS = testing.toSeq.toDS.toDF("testing_text")
     println("Updating DocumentAssembler input column")
     document.setInputCol("testing_text")
-    sparkPipeline.transform(testingDS).show()
+    sparkPipeline.transform(testingDS).show(false)
   }
 
 
