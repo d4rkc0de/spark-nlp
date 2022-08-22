@@ -5,6 +5,7 @@ import org.apache.spark.sql.functions.lit
 import com.johnsnowlabs.nlp.annotator._
 import com.johnsnowlabs.nlp.base._
 import org.apache.spark.ml.Pipeline
+import org.apache.spark.sql.functions.rand
 
 object JokesDetector extends App {
 
@@ -23,7 +24,7 @@ object JokesDetector extends App {
   val trainDataset2 = spark.read.option("header", "true").csv("src/main/resources/news_category_train.csv")
     .withColumn("category", lit("News"))
 
-  val trainDataset = trainDataset1.unionByName(trainDataset2)
+  val trainDataset = trainDataset1.unionByName(trainDataset2).orderBy(rand())
 
   val documentAssembler = new DocumentAssembler()
     .setInputCol("description")
@@ -51,7 +52,7 @@ object JokesDetector extends App {
     .setOutputCol("class")
     .setLabelColumn("category")
     .setBatchSize(64)
-    .setMaxEpochs(20)
+    .setMaxEpochs(6)
     .setLr(5e-3f)
     .setDropout(0.5f)
 
