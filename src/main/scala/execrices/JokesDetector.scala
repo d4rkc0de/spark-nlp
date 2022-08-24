@@ -15,13 +15,13 @@ object JokesDetector extends App {
     .getOrCreate()
   spark.sparkContext.setLogLevel("ERROR")
 
-  val trainDataset1 = spark.read.option("header", "true").csv("src/main/resources/shortjokes.csv")
+  val trainDataset1 = spark.read.option("header", "true").csv("src/main/resources/small/shortjokes.csv")
     .withColumnRenamed("ID", "category")
     .withColumnRenamed("Joke", "description")
     .withColumn("category", lit("Jokes"))
 
 
-  val trainDataset2 = spark.read.option("header", "true").csv("src/main/resources/news_category_train.csv")
+  val trainDataset2 = spark.read.option("header", "true").csv("src/main/resources/small/news_category_train.csv")
     .withColumn("category", lit("News"))
 
   val trainDataset = trainDataset1.unionByName(trainDataset2).orderBy(rand())
@@ -34,8 +34,12 @@ object JokesDetector extends App {
     .setInputCols("document")
     .setOutputCol("token")
 
+  val punctuationRemoval = new CustomTransformer()
+    .setInputCol("token")
+    .setOutputCol("cleanToken")
+
   val embeddings = WordEmbeddingsModel.pretrained("glove_100d", lang = "en")
-    .setInputCols("document", "token")
+    .setInputCols("document", "cleanToken")
     .setOutputCol("embeddings")
     .setCaseSensitive(false)
 
@@ -61,6 +65,7 @@ object JokesDetector extends App {
       Array(
         documentAssembler,
         token,
+        punctuationRemoval,
         embeddings,
         sentenceEmbeddings,
         docClassifier
@@ -79,6 +84,7 @@ object JokesDetector extends App {
 
   val prediction = pipelineModel.transform(testDataset)
 
+  prediction.show(false)
   //actual predicted classes
   prediction.select("class.result").show(false)
   //metadata related to scores of all classes
