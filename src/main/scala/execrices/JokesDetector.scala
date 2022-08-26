@@ -75,6 +75,7 @@ object JokesDetector extends App {
 
   // Let's train our multi-class classifier
   val pipelineModel = pipeline.fit(trainDataset)
+  pipelineModel.save("src/main/resources/jokes")
 
   val testDataset = spark.createDataFrame(Seq(
     (0, "Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul."),
