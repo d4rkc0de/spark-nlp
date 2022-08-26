@@ -25,16 +25,7 @@ class CustomTransformer(override val uid: String) extends Transformer with Defau
     val outCol = extractParamMap.getOrElse(outputCol, "output")
     val inCol = extractParamMap.getOrElse(inputCol, "input")
 
-    val poncts = Array(".", ",", "!")
-    val ponctRemover = (array: Array[Annotation]) => {
-      array
-        .map(value => {
-          val updatedResult = if (poncts.contains(value.result)) "" else value.result
-          Annotation(value.annotatorType, value.begin, value.end, updatedResult, value.metadata, value.embeddings)
-        })
-    }
-    val ponctRemoverUDF = udf(ponctRemover)
-    dataset.withColumn(outCol, ponctRemoverUDF(col(inCol)))
+    dataset.withColumn(outCol, regexp_replace(col(inCol), """[\p{Punct}]""", ""))
   }
 
   override def copy(extra: ParamMap): CustomTransformer = defaultCopy(extra)
