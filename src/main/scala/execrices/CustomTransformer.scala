@@ -1,10 +1,11 @@
 package execrices
 
+import com.johnsnowlabs.nlp.Annotation
 import org.apache.spark.ml.Transformer
 import org.apache.spark.ml.param.{Param, ParamMap}
 import org.apache.spark.ml.util.{DefaultParamsReadable, DefaultParamsWritable, Identifiable}
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.{DataFrame, Dataset}
+import org.apache.spark.sql.{DataFrame, Dataset, Row}
 import org.apache.spark.sql.types.StructType
 
 class CustomTransformer(override val uid: String) extends Transformer with DefaultParamsWritable {
@@ -23,19 +24,17 @@ class CustomTransformer(override val uid: String) extends Transformer with Defau
   override def transform(dataset: Dataset[_]): DataFrame = {
     val outCol = extractParamMap.getOrElse(outputCol, "output")
     val inCol = extractParamMap.getOrElse(inputCol, "input")
-    /*
-        val ponctRemover = udf((row: Any) => {
-          row
+
+    val poncts = Array(".", ",", "!")
+    val ponctRemover = (array: Array[Annotation]) => {
+      array
+        .map(value => {
+          val updatedResult = if (poncts.contains(value.result)) "" else value.result
+          Annotation(value.annotatorType, value.begin, value.end, updatedResult, value.metadata, value.embeddings)
         })
-    */
-    val stopWords = Array(".")
-
-    dataset.withColumn(outCol, //ponctRemover(
-      col(inCol)
-    )
-
-    //   .withColumnRenamed(inCol, outCol)
-    //   .withColumn("cleanToken.result", regexp_replace(col("cleanToken.result"), "\\p{Punct}", ""))
+    }
+    val ponctRemoverUDF = udf(ponctRemover)
+    dataset.withColumn(outCol, ponctRemoverUDF(col(inCol)))
   }
 
   override def copy(extra: ParamMap): CustomTransformer = defaultCopy(extra)

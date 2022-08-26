@@ -39,7 +39,7 @@ object JokesDetector extends App {
     .setOutputCol("cleanToken")
 
   val embeddings = WordEmbeddingsModel.pretrained("glove_100d", lang = "en")
-    .setInputCols("document", "cleanToken")
+    .setInputCols("document", "token")
     .setOutputCol("embeddings")
     .setCaseSensitive(false)
 
