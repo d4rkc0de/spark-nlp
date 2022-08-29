@@ -11,7 +11,7 @@ object JokesDetectorPretrained extends App {
     .getOrCreate()
   spark.sparkContext.setLogLevel("ERROR")
 
-  val pipelineModel: PipelineModel = PipelineModel.load("src/main/resources/jokes")
+  val pipelineModel: PipelineModel = PipelineModel.load("src/main/resources/models/jokes")
 
   val testDataset = spark.createDataFrame(Seq(
     (0, "Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul."),
