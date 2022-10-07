@@ -17,7 +17,8 @@ object JokesDetectorPretrained extends App {
     (0, "Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul."),
     (1, "Scientists have discovered irregular lumps beneath the icy surface of Jupiter's largest moon, Ganymede. These irregular masses may be rock formations, supported by Ganymede's icy shell for billions of years..."),
     (2, "John snow labs is a mysterious lab that train AI robots to transform them to rule over the whole world!"),
-    (3, "I couldn't figure out why the baseball kept getting larger. Then it hit me.")
+    (3, "I couldn't figure out why the baseball kept getting larger. Then it hit me."),
+    (4, "GothamChess is the best chess channel in youtube"),
   )).toDF("id", "description")
 
   val prediction = pipelineModel.transform(testDataset)

@@ -31,23 +31,23 @@ object JokesDetector extends App {
     .setInputCol("description")
     .setOutputCol("document")
 
-  val documentCleaner = new DocumentCleaner()
-    .setInputCols("document")
-    .setOutputCol("cleanedDocument")
+//  val documentCleaner = new DocumentCleaner()
+//    .setInputCols("document")
+//    .setOutputCol("cleanedDocument")
 
   val token = new Tokenizer()
-    .setInputCols("cleanedDocument")
+    .setInputCols("document")
     .setOutputCol("token")
 
 
   val embeddings = WordEmbeddingsModel.pretrained("glove_100d", lang = "en")
-    .setInputCols("cleanedDocument", "token")
+    .setInputCols("document", "token")
     .setOutputCol("embeddings")
     .setCaseSensitive(false)
 
   //convert word embeddings to sentence embeddings
   val sentenceEmbeddings = new SentenceEmbeddings()
-    .setInputCols("cleanedDocument", "embeddings")
+    .setInputCols("document", "embeddings")
     .setOutputCol("sentence_embeddings")
     .setStorageRef("glove_100d")
 
@@ -66,7 +66,7 @@ object JokesDetector extends App {
     .setStages(
       Array(
         documentAssembler,
-        documentCleaner,
+//        documentCleaner,
         token,
         embeddings,
         sentenceEmbeddings,
@@ -76,7 +76,7 @@ object JokesDetector extends App {
 
   // Let's train our multi-class classifier
   val pipelineModel = pipeline.fit(trainDataset)
-//  pipelineModel.write.overwrite().save("src/main/resources/models/jokes")
+  pipelineModel.write.overwrite().save("src/main/resources/models/jokes")
 
   val testDataset = spark.createDataFrame(Seq(
     (0, "Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul."),

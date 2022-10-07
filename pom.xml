@@ -11,7 +11,7 @@
         <scala.version>2.12.12</scala.version>
         <spark.version>3.2.1</spark.version>
         <hadoop.version>3.3.0</hadoop.version>
-        <spark.nlp.version>4.1.0</spark.nlp.version>
+        <spark.nlp.version>4.2.0</spark.nlp.version>
     </properties>
 
     <repositories>
@@ -97,7 +97,13 @@
         <dependency>
             <groupId>com.johnsnowlabs.nlp</groupId>
             <artifactId>spark-nlp-m1_2.12</artifactId>
-            <version>4.0.2</version>
+            <version>${spark.nlp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.johnsnowlabs.nlp</groupId>
+            <artifactId>spark-nlp-aarch64_2.12</artifactId>
+            <version>${spark.nlp.version}</version>
         </dependency>
     </dependencies>
 
