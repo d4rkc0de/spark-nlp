@@ -16,11 +16,15 @@ object FrenshModel extends App {
   val pipeline = new PretrainedPipeline("explain_document_md", "fr")
   // pipeline_asr_exp_w2v2t_vp_s438
 
-  val data = Seq("Bonjour de John Snow Labs !", "Le géant français a conquis l'Amérique",
-  "Rien ne va plus pour la patronne de Shauna Events", "Un coup de sang qui fait beaucoup de bruit en NBA").toDF("text")
+  val data = Seq(
+    "Bonjour de John Snow Labs !",
+    "Le géant français a conquis l'Amérique",
+    "Rien ne va plus pour la patronne de Shauna Events",
+    "Un coup de sang qui fait beaucoup de bruit en NBA"
+  ).toDF("text")
 
   val prediction = pipeline.transform(data)
   prediction.show(false)
-  prediction.select(explode(col("ner"))).show(200,false)
+  prediction.select(explode(col("ner"))).show(200, false)
   prediction.select(explode(col("entities"))).show(false)
 }

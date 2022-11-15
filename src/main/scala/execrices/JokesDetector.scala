@@ -31,9 +31,9 @@ object JokesDetector extends App {
     .setInputCol("description")
     .setOutputCol("document")
 
-//  val documentCleaner = new DocumentCleaner()
-//    .setInputCols("document")
-//    .setOutputCol("cleanedDocument")
+  val documentCleaner = new DocumentCleaner()
+    .setInputCols("document")
+    .setOutputCol("cleanedDocument")
 
   val token = new Tokenizer()
     .setInputCols("document")
@@ -66,7 +66,7 @@ object JokesDetector extends App {
     .setStages(
       Array(
         documentAssembler,
-//        documentCleaner,
+        documentCleaner,
         token,
         embeddings,
         sentenceEmbeddings,
